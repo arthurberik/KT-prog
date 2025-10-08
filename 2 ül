@@ -1,0 +1,95 @@
+Ülesanne 2. Tartu transport (10 p)
+
+Taavi soovib külastada oma sõpru, kuid ei tea, kas kasutada Bolti tõukeratast või Tartu rattaringluse ratast. Rattaringluse rattaga on keskmiseks sõidukiiruseks 25 km/h ja Bolti tõukerataga 15 km/h. Kirjuta funktsioon sõiduaeg, mille parameetriteks on sõidu pikkus kilomeetrites (ujukoma arv), tunnus, kas kasutatakse tõukeratast ("T") või jalgratast ("R"), ja aeg minutites (täisarv) sõiduvahendi leidmiseks jalutamisest. Funktsioon tagastab kõndimisele ja sõitmisele kuluva koguaja ümardatuna täisminutiteks (täisarv), eeldades, et sõit toimub keskmise kiirusega.
+Viide. aeg = (teepikkus) / (kiirus).
+
+Näited funktsiooni sõiduaeg tööst:
+
+text
+>>> sõiduaeg(3.5, "T", 5)
+19
+>>> sõiduaeg(3.5, "R", 10)
+18
+Taavi soovib sõiduvahendi, mis oleks kiirem, kuid võrdse sõiduaja korral valib odavama vahendi. Bolti tõukerattal on 0.18 eurot kilomeetri kohta ja rattaringluse tunnipilet on 2 eurot. Kirjuta funktsioon maksumus, mille parameetriteks on sõidupikkus ja ajavahemik minutites ja tunnus, kas kasutatakse tõukeratast ("T") või jalgratast ("R"). Eeldame, et sõidud ei kulu üle ühe tunni. Funktsioon tagastab sõidu maksumuse eurodes, ümardatuna kahe koha pärast koma.
+
+Näited funktsiooni maksumus tööst:
+
+text
+>>> maksumus(19, "T")
+3.42
+>>> maksumus(19, "R")
+2
+Kirjuta programm, mis
+
+küsib kasutajalt:
+
+sõidu pikkuse kilomeetrites (ujukoma arv),
+
+aega minutites tõukerattani jõudmiseks (täisarv),
+
+aega minutites rattaringluse rattani jõudmiseks (täisarv),
+
+leiab funktsioonide sõiduaeg ja maksumus rakendades mõlema vahendiga kohalejõudmise aja ja maksumuse ning näitab info ekraanile,
+
+kuvab ekraanile, kumb sõiduvahend tuleks valida. Sama aja korral eelistada odavamat.
+Eeldame, et kasutaja sisestab andmed õigesti.
+
+Näide 1 programmi tööst (kasutaja sisend on paksus kaldkirjas):
+
+text
+Sisesta sõidu pikkus: 3.5
+Aeg minutites tõukeratani jõudmiseks: 5
+Aeg minutites rattaringluse rattani jõudmiseks: 10
+Tõukerattaga jõuab sihtkohta 19 minutiga, maksumus on 3.42 eurot.
+Rattaringluse rattaga jõuab sihtkohta 18 minutiga, maksumus on 2 eurot.
+Valida tuleks rattaringluse ratas.
+Näide 2 programmi tööst (kasutaja sisend on paksus kaldkirjas):
+
+text
+Sisesta sõidu pikkus: 2
+Aeg minutites tõukeratani jõudmiseks: 2
+Aeg minutites rattaringluse rattani jõudmiseks: 6
+Tõukerattaga jõuab sihtkohta 10 minutiga, maksumus on 1.98 eurot.
+Rattaringluse rattaga jõuab sihtkohta 12 minutiga, maksumus on 2 eurot.
+Mõlemaga kulub sama aeg, kuid odavam on sõita tõukerattaga.
+
+
+
+# Funktsioon sõiduaeg
+def sõiduaeg(pikkus_km, vahend, aeg_minutit):
+    kiirus = 15 if vahend == "T" else 25
+    sõidu_aeg_min = (pikkus_km / kiirus) * 60
+    kogu_aeg = aeg_minutit + sõidu_aeg_min
+    return int(round(kogu_aeg))
+
+# Funktsioon maksumus
+def maksumus(kogu_aeg_min, vahend):
+    if vahend == "T":
+        hind = kogu_aeg_min * 0.18  # €/min
+    else:
+        hind = 2  # Rattaringluse tunnipilet
+    return round(hind, 2)
+
+# Peaprogramm
+pikkus = float(input("Sisesta sõidu pikkus: "))
+aeg_t = int(input("Aeg minutites tõukeratani jõudmiseks: "))
+aeg_r = int(input("Aeg minutites rattaringluse rattani jõudmiseks: "))
+
+aeg_t_total = sõiduaeg(pikkus, "T", aeg_t)
+aeg_r_total = sõiduaeg(pikkus, "R", aeg_r)
+
+hind_t = maksumus(aeg_t_total, "T")
+hind_r = maksumus(aeg_r_total, "R")
+
+print(f"Tõukerattaga jõuab sihtkohta {aeg_t_total} minutiga, maksumus on {hind_t} eurot.")
+print(f"Rattaringluse rattaga jõuab sihtkohta {aeg_r_total} minutiga, maksumus on {hind_r} eurot.")
+
+if aeg_t_total < aeg_r_total:
+    valik = "tõukeratas"
+elif aeg_r_total < aeg_t_total:
+    valik = "rattaringluse ratas"
+else:
+    valik = "tõukeratas" if hind_t < hind_r else "rattaringluse ratas"
+
+print(f"Valida tuleks {valik}.")
+
