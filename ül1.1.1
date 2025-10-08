@@ -1,0 +1,111 @@
+Programmeerimise 1. kontrolltöö
+Ülesanne 1. Sigaretid (10 p)
+Juku vanaema tahab veenda vanaisa suitsetamisest loobuma ja näidata, kui palju sigarette on
+ostetud ja kui palju raha on asjatult kulutatud. Juku vanaema palus Jukul panna kirja, kui palju
+vanaisa kulutab igas kuus raha sigarettide ostmiseks. Kõik andmed on salvestatud faili kulud.txt.
+Näide faili kulud.txt võimalikust sisust
+jaanuar
+15.20
+4
+märts
+12.85
+3
+veebruar
+13.39
+3
+märts
+8.10
+2
+Faili pikkus ei ole teada, kuid võib eeldada, et iga kuu andmed on kolmel real. Sama kuu jaoks võib
+olla andmeid sisestatud mitmel korral. Esimesel real on kuu nimetus, teisel kulutatud summa ja
+kolmandal ostetud pakkide arv. Juku võttis ülesannet tõsiselt ja arvutas lisaks, kui palju nikotiini ja
+tõrva ostetud sigaretid sisaldasid. Igas pakis on 20 sigaretti ja üks sigaret sisaldab keskmiselt 0,9
+mg nikotiini ja 11 mg tõrva.
+Kirjuta programm, mis küsib kasutajalt kuu nime ja väljastab ekraanile sellel kuul kulutatud summa
+ja ostetud pakkide arvu. Lisaks tuleb väljastada kogu kulutatud summa, ostetud pakkide arv ning
+summaarne tarbitud nikotiini- ja tõrva kogus. On teada, et ühekordsel tarbimisel võib olla surmav
+juba 50 mg nikotiini. Kui summaarne nikotiini kogus ületab 50 mg, siis arvutada välja, mitu korda
+(ümardatuna täisarvuks) summaarne tarbitud kogus ületab surmavat kogust ja anda vastav
+hoiatus. Kulutatud summa kokku ja ostetud pakkide arv tuleb kirjutada faili kulud_kokku.txt eraldi
+ridadele.
+Programmi võimalik väljund faili kulud.txt korral (kasutaja sisend on paksus kirjas)
+Sisesta kuu nimi: märts
+Kuus 'märts' kulutati 20.95 eurot ja osteti 5 pakki.
+Kokku kulutati 49.54 eurot ja osteti 12 pakki.
+Vanaisa tarbis kokku 216.0 mg nikotiini ja 2640 mg tõrva.
+Selline kogus nikotiini ületab 4-kordse surmava annuse ühekordsel
+tarbimisel!
+Näide faili kulud_kokku.txt võimalikust sisust
+49.54
+12
+
+import math
+
+# Sigarettide info
+SIGARETTE_PAKIS = 20
+NIKOTIIN_MG = 0.9
+TORV_MG = 11
+SURMAV_NIKOTIIN = 50  # mg
+
+# Küsime kasutajalt kuu nime
+kuu_sisestus = input("Sisesta kuu nimi: ").strip().lower()
+
+# Failist lugemine
+faili_nimi = "kulud.txt"
+try:
+    with open(faili_nimi, "r", encoding="utf-8") as f:
+        read_lines = [line.strip() for line in f if line.strip()]
+except FileNotFoundError:
+    print(f"Faili '{faili_nimi}' ei leitud.")
+    exit()
+
+# Loendame kuupõhised summad ja paketid
+kuu_summa = 0.0
+kuu_pakid = 0
+kokku_summa = 0.0
+kokku_pakid = 0
+
+i = 0
+while i < len(read_lines):
+    kuu = read_lines[i].lower()
+    summa = float(read_lines[i + 1])
+    pakid = int(read_lines[i + 2])
+
+    # Kuu kontroll
+    if kuu == kuu_sisestus:
+        kuu_summa += summa
+        kuu_pakid += pakid
+
+    # Kogu kogus
+    kokku_summa += summa
+    kokku_pakid += pakid
+
+    i += 3
+
+# Tarbitud nikotiini ja tõrva arvutus
+kokku_sigaretid = kokku_pakid * SIGARETTE_PAKIS
+kokku_nikotiin = kokku_sigaretid * NIKOTIIN_MG
+kokku_torv = kokku_sigaretid * TORV_MG
+
+# Kuupõhine väljund
+print(f"Kuus '{kuu_sisestus}' kulutati {kuu_summa:.2f} eurot ja osteti {kuu_pakid} pakki.")
+
+# Kogu perioodi väljund
+print(f"Kokku kulutati {kokku_summa:.2f} eurot ja osteti {kokku_pakid} pakki.")
+print(f"Vanaisa tarbis kokku {kokku_nikotiin} mg nikotiini ja {kokku_torv} mg tõrva.")
+
+# Kontroll surmava nikotiini osas
+if kokku_nikotiin > SURMAV_NIKOTIIN:
+    kord = math.ceil(kokku_nikotiin / SURMAV_NIKOTIIN)
+    print(f"Selline kogus nikotiini ületab {kord}-kordse surmava annuse ühekordsel")
+    print("tarbimisel!")
+
+# Salvestame kokkuvõtte faili kulud_kokku.txt
+with open("kulud_kokku.txt", "w", encoding="utf-8") as f_out:
+    f_out.write(f"{kokku_summa:.2f}\n")
+    f_out.write(f"{kokku_pakid}\n")
+
+
+
+
+
