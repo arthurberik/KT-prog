@@ -1,0 +1,70 @@
+Lauamängu saab mängida erinev arv mängijaid. Koosta funktsioon mitu_mängu, mis võtab
+argumentideks lauamänguõhtul osalejate arvu ja maksimaalse üht mängu mängida saavate
+mängijate arvu, ning tagastab lauamängude arvu (täisarvuna), mida on vaja, et kõik osalejad saaks
+seda mängida.
+Näited funktsiooni mitu_mängu tööst
+>>> mitu_mängu(10, 4)
+3
+>>> mitu_mängu(6, 3)
+2
+Ühe mängu rendihind on 5 eurot. Koosta funktsioon kas_raha_jätkub, mis võtab argumentideks
+lauamängude arvu ning lauamänguõhtu osalustasu (ujukomaarvuna) ja osalejate arvu ning
+tagastab tõeväärtuse True, kui mängude rentimiseks raha jätkub, ja False, kui raha ei jätku.
+Näited funktsiooni kas_raha_jätkub tööst
+>>> kas_raha_jätkub(1, 2.5, 2)
+True
+>>> kas_raha_jätkub(3, 1.5, 3)
+False
+Kirjuta põhiprogramm, mis
+● küsib kasutajalt
+○ osalejate arvu (täisarvuna),
+○ ühte mängu mängida saavate inimeste arvu (täisarvuna),
+○ lauamänguõhtul osalemise tasu ühe inimese kohta (ujukomaarvuna),
+● leiab funktsioone mitu_mängu ja kas_raha_jätkub kasutades, mitu mängu tuleb rentida
+ja kas selleks on piisavalt raha.
+Näited programmi tööst (kasutaja sisend on paksus kirjas)
+Sisesta osalejate arv: 7
+Sisesta ühte mängu mängida saavate inimeste arv: 3
+Sisesta osalustasu ühe inimese kohta: 2.5
+Tuleb rentida 3 mängu. Raha on selleks piisavalt.
+
+Sisesta osalejate arv: 4
+Sisesta ühte mängu mängida saavate inimeste arv: 4
+Sisesta osalustasu ühe inimese kohta: 1
+Tuleb rentida 1 mäng. Kahjuks raha ei jätku.
+
+import math
+
+# Funktsioon mängude arvu leidmiseks
+def mitu_mängu(osalejad, maks_inimesed_mängus):
+    """
+    Arvutab, mitu mängu tuleb rentida, et kõik osalejad saaksid mängida.
+    """
+    return math.ceil(osalejad / maks_inimesed_mängus)
+
+# Funktsioon raha kontrollimiseks
+def kas_raha_jätkub(mängude_arv, osalustasu, osalejad):
+    """
+    Kontrollib, kas osalustasust jagub raha mängude rentimiseks.
+    Ühe mängu rendihind on 5 eurot.
+    """
+    kokku_rendi_hind = mängude_arv * 5
+    kogu_tulu = osalustasu * osalejad
+    return kogu_tulu >= kokku_rendi_hind
+
+# Peaprogramm
+osalejate_arv = int(input("Sisesta osalejate arv: "))
+maks_inimesed_mängus = int(input("Sisesta ühte mängu mängida saavate inimeste arv: "))
+osalustasu = float(input("Sisesta osalustasu ühe inimese kohta: "))
+
+# Arvutame mängude arvu
+mängude_arv = mitu_mängu(osalejate_arv, maks_inimesed_mängus)
+
+# Kontrollime raha jätkumist
+raha_piisab = kas_raha_jätkub(mängude_arv, osalustasu, osalejate_arv)
+
+# Kuvame tulemuse
+if raha_piisab:
+    print(f"Tuleb rentida {mängude_arv} mängu. Raha on selleks piisavalt.")
+else:
+    print(f"Tuleb rentida {mängude_arv} mängu. Kahjuks raha ei jätku.")
